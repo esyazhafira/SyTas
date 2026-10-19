@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SyTas - Toko Tas Online</title>
+<style>
+:root{--bg:#f2f5f7;--sf:#fff;--ink:#14213d;--mut:#5b6678;--line:#d9e0e7;--ac:#0f766e;--acx:#fff;--log:#f3f7f6;--lt:#0b5d4b;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sf);color:var(--ink);font:15px/1.5 "Trebuchet MS","Segoe UI",system-ui,sans-serif}
+header{position:sticky;top:0;z-index:10;background:var(--sf);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:8px 4vw}
+header h1{margin:0;font:2rem Georgia,serif;letter-spacing:-1px}
+header h1 a{color:inherit;text-decoration:none}header h1 span{color:var(--ac)}
+.hr{display:flex;align-items:center;gap:4px}.idr{font-size:.85rem;margin-right:6px}
+button,input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+button{cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}
+button.p,.card button.p{background:var(--ac);color:var(--acx);border:0;font-weight:700}
+.ic{border:0;background:none;font-size:1.3rem;position:relative}
+.ic b{position:absolute;top:-2px;right:-4px;background:var(--ac);color:var(--acx);border-radius:9px;font-size:.7rem;padding:0 5px}
+:focus-visible{outline:3px solid var(--ac);outline-offset:1px}
+.cats{display:flex;gap:16px;overflow-x:auto;padding:16px 4vw 4px}
+.cat{border:0;background:none;text-align:center;font-size:.85rem;min-width:84px}
+.cat i{display:grid;place-items:center;width:72px;height:72px;margin:0 auto 4px;border-radius:50%;background:var(--sf);border:2px solid var(--line);font-size:2rem;font-style:normal}
+.cat.on i{border-color:var(--ac);background:var(--ac)}
+main{display:grid;grid-template-columns:260px 1fr;gap:18px;padding:14px 4vw;max-width:1400px;margin:auto}
+@media(max-width:860px){main{grid-template-columns:1fr}}
+.panel{background:var(--sf);border:1px solid var(--line);border-radius:12px;padding:14px}
+.panel h3{margin:14px 0 6px;font-size:.95rem}.panel h3:first-child{margin-top:0}
+.panel label{display:block;padding:3px 0;cursor:pointer}.panel input[type=radio]{width:auto;margin-right:6px}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.top h2{margin:0}.top div{display:flex;gap:8px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.card{background:var(--sf);border:1px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;position:relative}
+.pic{height:150px;border-radius:8px;display:grid;place-items:center;font-size:4.2rem;background:linear-gradient(135deg,#cfe9e5,#dfe6f5);position:relative}
+.bd{position:absolute;top:8px;left:8px;background:#444c;color:#fff;font-size:.7rem;padding:2px 7px;border-radius:4px}
+.hrt{position:absolute;top:6px;right:6px;border:0;background:#fffa;font-size:1.1rem;border-radius:50%;padding:2px 7px}
+.card h4{margin:8px 0 2px;font-size:.95rem}.price{font-weight:700}.mut{color:var(--mut);font-size:.8rem}
+.ptr{font:.72rem Consolas,monospace;color:var(--mut)}
+.empty{color:var(--mut);padding:24px;text-align:center}
+#ov{position:fixed;inset:0;background:#0007;z-index:20;display:none}#ov.on{display:block}
+.drawer{position:fixed;top:0;bottom:0;width:min(370px,90vw);background:var(--sf);z-index:30;padding:16px;overflow:auto;transition:transform .25s}
+.l{left:0;transform:translateX(-100%)}.r{right:0;transform:translateX(100%)}.drawer.open{transform:none}
+.drawer h2{margin:0 0 10px}.drawer .m{display:block;width:100%;text-align:left;border:0;background:none;padding:10px 4px;border-bottom:1px solid var(--line)}
+.modal{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:#0007}.modal.on{display:grid}
+.box{background:var(--sf);border-radius:14px;width:min(580px,94vw);max-height:90vh;overflow:auto;padding:22px;position:relative}
+.x{position:absolute;top:10px;right:10px;border:0;background:none;font-size:1.2rem}
+table{width:100%;border-collapse:collapse;font-size:.9rem;margin:10px 0}td{padding:5px 8px;vertical-align:top}tr:nth-child(odd){background:var(--bg)}td:first-child{width:90px;color:var(--mut)}
+.var{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.var div{flex:1}
+.sw{width:38px;height:38px;border-radius:8px;border:1px solid var(--line)}.warn{color:#d9534f}.bad{color:var(--mut)}
+.node{border:1px dashed var(--ac);border-radius:8px;padding:8px;font-size:.88rem}.arr{text-align:center;color:var(--ac);font:.75rem Consolas,monospace;margin:3px 0}
+.q{display:flex;gap:6px;align-items:center;margin-top:4px}.q button{padding:2px 9px}
+.tabs{display:flex;margin:10px 0}.tabs button{flex:1;border-radius:0;border:0;border-bottom:2px solid var(--line)}.tabs .on{border-color:var(--ink);font-weight:700}
+.f{display:grid;gap:10px;margin-top:10px}.f input,.f select,.f textarea{width:100%}
+.logs{margin:0 4vw 80px;display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:860px){.logs{grid-template-columns:1fr}}
+.logs h3{margin:0 0 6px}.log{background:var(--log);border:1px solid var(--line);color:var(--lt);font:12px/1.5 Consolas,monospace;padding:10px;border-radius:8px;height:240px;overflow:auto;white-space:pre-wrap;margin:0}
+.chat{position:fixed;right:18px;bottom:18px;width:54px;height:54px;border-radius:50%;background:var(--ac);color:var(--acx);border:0;font-size:1.5rem;z-index:9}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:20px;z-index:50;display:none}#toast.on{display:block}
+[hidden]{display:none!important}
+.tn{display:flex;gap:20px}.tn a{color:var(--ink);text-decoration:none;font-weight:600}.tn a:hover{color:var(--ac)}
+@media(max-width:760px){.tn{display:none}}
+.hero{margin:16px 4vw;border-radius:16px;padding:40px 6vw;background:linear-gradient(120deg,#d7efe9,#e3e9f8);display:flex;justify-content:space-between;align-items:center;gap:20px}
+.hero h2{font:2.2rem/1.15 Georgia,serif;margin:0 0 8px;max-width:520px}.hero p{margin:0 0 16px;color:var(--mut)}.hero b{font-size:5.5rem}
+.sec{margin:22px 4vw 10px}.hp{padding:0 4vw}
+.ban{background:var(--bg);border-radius:10px;padding:10px;margin:8px 0;font-size:.9rem}.bar{height:8px;background:var(--line);border-radius:6px;margin-top:6px}.bar i{display:block;height:100%;background:var(--ac);border-radius:6px}
+.lnk{border:0;background:none;text-decoration:underline;padding:2px 4px;font-size:.8rem}
+.cohead{display:flex;align-items:center;gap:10px;padding:10px 4vw;border-bottom:1px solid var(--line)}
+.cogrid{display:grid;grid-template-columns:1fr 400px;gap:24px;padding:16px 4vw;max-width:1200px;margin:auto}@media(max-width:860px){.cogrid{grid-template-columns:1fr}}
+.opt{display:block;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;cursor:pointer}.opt b{float:right}
+.row{display:flex;justify-content:space-between;padding:4px 0}
+.sws{display:flex;flex-wrap:wrap;gap:8px}.swb{display:grid;justify-items:center;gap:2px;width:78px;font-size:.8rem}.swb.on{border-color:var(--ac);border-width:2px}.swb.bad{opacity:.5}
+.dark{background:#1b1b1b!important;color:#fff!important}
+input[type=checkbox],input[type=radio]{width:auto}
+</style>
+</head>
+<body>
+<header>
+  <button class="ic" data-act="menu" aria-label="Menu">☰</button>
+  <h1><a href="#" data-act="home">Sy<span>Tas</span></a></h1>
+  <nav class="tn"><a href="#" data-act="home">Home</a><a href="#" data-act="shop">Semua Produk</a><a href="#" data-act="best">Best Selling</a></nav><div class="hr"><span class="idr">🇮🇩 IDR</span>
+    <button class="ic" data-act="find" aria-label="Cari">🔍</button>
+    <button class="ic" data-act="cart" aria-label="Keranjang">🛍️<b id="cnt"></b></button>
+    <button class="ic" data-act="acc" aria-label="Akun">👤</button></div>
+</header>
+<div id="ov" data-act="close"></div>
+<nav id="menu" class="drawer l"></nav>
+<aside id="cartD" class="drawer r"></aside>
+<div id="modal" class="modal" data-act="close"><div class="box" id="box"></div></div>
+<div id="toast"></div>
+<div id="home">
+  <section class="hero"><div><h2>Selalu ada tas yang cocok untukmu.</h2><p>Ransel, tote, koper, dan lainnya dengan harga bersahabat.</p><button class="p" data-act="shop">Belanja Sekarang</button></div><b aria-hidden="true">🎒</b></section>
+  <div class="cats" id="cats2"></div>
+  <h2 class="sec">Best Selling</h2><div class="grid hp" id="gBest"></div>
+  <h2 class="sec">Produk Terbaru</h2><div class="grid hp" id="gNew"></div>
+</div>
+<div id="shop" hidden>
+<div class="cats" id="cats"></div>
+<main>
+  <aside class="panel" data-f>
+    <h3>Cari tas</h3>
+    <input id="q" placeholder="mis. Ransel" aria-label="Cari nama tas">
+    <select id="sm" style="margin-top:6px;width:100%"><option value="linear">Linear Search (mengandung kata)</option><option value="binary">Binary Search (awalan nama)</option></select>
+    <button class="p" data-act="apply" style="margin-top:6px;width:100%">Cari</button>
+    <h3>Tipe Produk</h3>
+    <label><input type="radio" name="tipe" value="semua" checked>Semua Produk</label>
+    <label><input type="radio" name="tipe" value="unggul">Produk Unggulan</label>
+    <h3>Ketersediaan</h3>
+    <label><input type="radio" name="ada" value="semua" checked>Semua</label>
+    <label><input type="radio" name="ada" value="ada">Ada Stok</label>
+    <h3>Harga</h3>
+    <label><input type="radio" name="harga" value="0-999999999" checked>Semua harga</label>
+    <label><input type="radio" name="harga" value="0-150000">Di bawah Rp150.000</label>
+    <label><input type="radio" name="harga" value="150000-350000">Rp150.000 - 350.000</label>
+    <label><input type="radio" name="harga" value="350000-999999999">Di atas Rp350.000</label>
+  </aside>
+  <section>
+    <div class="top" data-f><h2 id="judul"></h2>
+      <div><select id="urut" aria-label="Urutkan"><option value="populer">Urutan: Terpopuler</option><option value="hargaA">Harga terendah</option><option value="hargaD">Harga tertinggi</option><option value="nama">Nama A-Z</option></select>
+      <select id="algo" aria-label="Metode sorting"><option value="bubble">Bubble Sort</option><option value="selection">Selection Sort</option></select></div></div>
+    <div class="grid" id="grid"></div>
+  </section>
+</main></div>
+<div id="co" hidden></div>
+<section class="logs panel" id="logs">
+  <div><h3>Log sorting</h3><pre class="log" id="logS"></pre></div>
+  <div><h3>Log searching</h3><pre class="log" id="logQ"></pre></div>
+</section>
+<button class="chat" data-act="chat" aria-label="Chat">💬</button>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = n => "Rp" + n.toLocaleString("id-ID");
+const HEX = {Hitam:"#222",Navy:"#1f2f5c",Merah:"#b3382c",Krem:"#e3cfa8",Pink:"#f0b8c4",Coklat:"#7a5233",Hijau:"#3e6b4f",Abu:"#8a919b"};
+
+/* ===== STRUCT: kumpulan field tetap (dikunci Object.freeze) ===== */
+const Varian = (warna, stok) => Object.freeze({ warna, stok });
+function Produk(id, nama, kat, harga, emoji, badge, jual, bahan, ukuran, desk, v) {
+  const varian = v.map(([w, s]) => Varian(w, s));
+  return Object.freeze({ id, nama, kat, harga, emoji, badge, jual, bahan, ukuran, desk, varian,
+    stok: varian.reduce((a, x) => a + x.stok, 0) });
+}
+
+/* ===== ARRAY: daftar produk ===== */
+const produk = [
+  Produk(1,"Ransel Kampus Urban","Ransel",285000,"🎒","TERLARIS",320,"Nylon anti air","30 x 14 x 42 cm","Muat laptop sampai 14 inci, saku depan untuk akses cepat.",[["Hitam",8],["Navy",4],["Abu",0]]),
+  Produk(2,"Tote Bag Kanvas","Tote",95000,"👜","",150,"Kanvas tebal","38 x 10 x 35 cm","Ringan dan kuat, cocok untuk belanja dan kuliah.",[["Krem",30],["Hitam",10]]),
+  Produk(3,"Tas Selempang Pria","Selempang",175000,"👝","TERBARU",90,"Polyester","24 x 8 x 18 cm","Selempang kompak dengan tiga kompartemen.",[["Hitam",12],["Coklat",3]]),
+  Produk(4,"Koper Kabin 20 inci","Koper",650000,"🧳","",45,"Polikarbonat","35 x 22 x 55 cm","Roda 360 derajat, kunci TSA, muat kabin pesawat.",[["Navy",4],["Pink",2]]),
+  Produk(5,"Tas Kerja Laptop","Tas kerja",420000,"💼","TERPOPULER",210,"Kulit sintetis","40 x 8 x 30 cm","Slot laptop 15 inci dan saku dokumen.",[["Hitam",6],["Coklat",4]]),
+  Produk(6,"Ransel Hiking 40L","Ransel",530000,"🎒","",60,"Ripstop nylon","32 x 20 x 56 cm","Rangka punggung berventilasi dan rain cover.",[["Hijau",5],["Hitam",3]]),
+  Produk(7,"Handbag Elegan","Handbag",340000,"👛","TERBARU",130,"Kulit sintetis","28 x 12 x 22 cm","Tampil rapi untuk kerja dan acara santai.",[["Merah",5],["Krem",4],["Pink",3]]),
+  Produk(8,"Pouch Serut Mini","Pouch",45000,"🧰","",75,"Parasut","15 x 5 x 18 cm","Untuk kosmetik, charger, dan alat tulis.",[["Pink",30],["Hitam",30]]),
+  Produk(9,"Tas Pinggang Sporty","Selempang",120000,"👝","",85,"Polyester","28 x 7 x 14 cm","Praktis untuk olahraga dan perjalanan.",[["Hitam",15],["Abu",10]]),
+  Produk(10,"Ransel Anti Air","Ransel",310000,"🎒","TERLARIS",280,"Nylon coating","30 x 13 x 44 cm","Resleting anti air dan tali bahu empuk.",[["Navy",9],["Hitam",8]])
+];
+const CATS = [["Semua","🛍️"],["Ransel","🎒"],["Tote","👜"],["Selempang","👝"],["Koper","🧳"],["Tas kerja","💼"],["Handbag","👛"],["Pouch","🧰"]];
+let kat = "Semua", last = [], cur = -1, accTab = "login", selV = 0, co = {}, view = "home";
+let user = null, users = [], orders = [], wish = []; // wish = array pointer (referensi) ke produk
+try { users = JSON.parse(localStorage.getItem("sytas-users") || "[]"); } catch (e) {}
+
+/* ===== SORTING (dengan log) ===== */
+const lebih = (a, b, k) => typeof a[k] === "string" ? a[k].localeCompare(b[k]) > 0 : a[k] > b[k];
+const val = (p, k) => k === "harga" ? fmt(p.harga) : p[k];
+function bubbleSort(arr, key, asc, log) {
+  const n = arr.length;
+  log(`Bubble Sort ${key} (${asc ? "naik" : "turun"}), ${n} data`);
+  for (let i = 0; i < n - 1; i++) {
+    let tukar = false; log(`\nPass ${i + 1}`);
+    for (let j = 0; j < n - i - 1; j++) {
+      const a = arr[j], b = arr[j + 1], perlu = asc ? lebih(a, b, key) : lebih(b, a, key);
+      log(`  [${j}] ${a.nama} (${val(a, key)}) vs [${j + 1}] ${b.nama} (${val(b, key)}) -> ${perlu ? "TUKAR" : "tetap"}`);
+      if (perlu) { arr[j] = b; arr[j + 1] = a; tukar = true; }
+    }
+    if (!tukar) { log("  Tidak ada pertukaran, selesai."); break; }
+  }
+  log("\nSelesai.");
+}
+function selectionSort(arr, key, asc, log) {
+  const n = arr.length;
+  log(`Selection Sort ${key} (${asc ? "naik" : "turun"}), ${n} data`);
+  for (let i = 0; i < n - 1; i++) {
+    let m = i; log(`\nPosisi ${i}: cari ${asc ? "terkecil" : "terbesar"}`);
+    for (let j = i + 1; j < n; j++) {
+      const baik = asc ? lebih(arr[m], arr[j], key) : lebih(arr[j], arr[m], key);
+      log(`  ${arr[j].nama} (${val(arr[j], key)}) vs kandidat ${arr[m].nama} -> ${baik ? "kandidat baru" : "tetap"}`);
+      if (baik) m = j;
+    }
+    if (m !== i) { [arr[i], arr[m]] = [arr[m], arr[i]]; log(`  Tukar indeks ${i} <-> ${m}`); }
+  }
+  log("\nSelesai.");
+}
+
+/* ===== SEARCHING (dengan log) ===== */
+function linearSearch(arr, kata, log) {
+  const hasil = []; log(`Linear Search "${kata}" pada ${arr.length} data`);
+  arr.forEach((p, i) => {
+    const ok = p.nama.toLowerCase().includes(kata);
+    log(`  indeks ${i}: ${p.nama} -> ${ok ? "COCOK" : "tidak"}`); if (ok) hasil.push(p);
+  });
+  log(`\n${hasil.length} produk ditemukan.`); return hasil;
+}
+function binarySearch(arr, kata, log) {
+  const d = arr.slice(); log("Data diurutkan dulu menurut nama (Selection Sort).");
+  selectionSort(d, "nama", true, () => {});
+  log("  " + d.map(p => p.nama).join(" | ") + `\n\nBinary Search awalan "${kata}"`);
+  let lo = 0, hi = d.length - 1, f = -1, s = 1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1, aw = d[mid].nama.toLowerCase().slice(0, kata.length);
+    log(`  Langkah ${s++}: lo=${lo} hi=${hi} mid=${mid} (${d[mid].nama})`);
+    if (aw === kata) { log("    cocok -> ditemukan"); f = mid; break; }
+    if (aw < kata) { log("    lebih kecil -> cari kanan"); lo = mid + 1; } else { log("    lebih besar -> cari kiri"); hi = mid - 1; }
+  }
+  if (f < 0) { log("\nTidak ditemukan."); return []; }
+  let a = f, b = f;
+  while (a > 0 && d[a - 1].nama.toLowerCase().startsWith(kata)) a--;
+  while (b < d.length - 1 && d[b + 1].nama.toLowerCase().startsWith(kata)) b++;
+  log(`\n${b - a + 1} produk ditemukan.`); return d.slice(a, b + 1);
+}
+
+/* ===== POINTER: keranjang = linked list =====
+   node.ref -> pointer ke produk asli (bukan salinan), node.next -> pointer ke node berikutnya. */
+const alamat = p => "0x" + (0x7a00 + p.id * 16).toString(16).toUpperCase();
+let head = null;
+function addCart(p, w) {
+  let c = head, prev = null;
+  while (c) { if (c.ref === p && c.warna === w) { c.qty++; return cartUpd(); } prev = c; c = c.next; }
+  const n = { ref: p, warna: w, qty: 1, next: null };
+  prev ? prev.next = n : head = n; cartUpd();
+}
+function nodeAt(i) { let c = head; while (c && i--) c = c.next; return c; }
+function removeNode(t) {
+  if (head === t) head = t.next; else { let c = head; while (c && c.next !== t) c = c.next; if (c) c.next = t.next; }
+  t.next = null; cartUpd();
+}
+const GRATIS = 300000;
+function cartUpd() {
+  let h = `<button class="x" data-act="close" aria-label="Tutup">✕</button><h2>Keranjang</h2>
+    <p class="mut">Linked list: tiap node menunjuk (pointer) ke produk dan node berikutnya.</p>`, tot = 0, n = 0, i = 0;
+  for (let c = head; c; c = c.next) { tot += c.ref.harga * c.qty; n += c.qty; }
+  if (head) h += tot >= GRATIS ? '<div class="ban"><b>Selamat!</b> Kamu mendapat diskon <span class="warn">Gratis Ongkir</span> dan akan terlihat di halaman Checkout.<div class="bar"><i style="width:100%"></i></div></div>'
+    : `<div class="ban">Belanja ${fmt(GRATIS - tot)} lagi untuk <span class="warn">Gratis Ongkir</span><div class="bar"><i style="width:${Math.round(tot / GRATIS * 100)}%"></i></div></div>`;
+  for (let c = head; c; c = c.next, i++) {
+    const st = c.ref.varian.find(v => v.warna === c.warna).stok;
+    h += `<div class="node"><b>${c.ref.nama}</b> (${c.warna})<br>${fmt(c.ref.harga * c.qty)}${st <= 5 ? `<div class="warn">Hanya tersisa ${st} stock.</div>` : ""}
+      <div class="q"><button data-act="dec" data-i="${i}">-</button>${c.qty}<button data-act="inc" data-i="${i}">+</button>
+      <button class="lnk" data-act="tow" data-i="${i}" style="margin-left:auto">Pindahkan ke Wishlist</button><button class="lnk" data-act="del" data-i="${i}">Hapus</button></div>
+      <span class="ptr">ref -> ${alamat(c.ref)}</span></div><div class="arr">next -> ${c.next ? alamat(c.next.ref) : "null"}</div>`;
+  }
+  if (!head) h += '<div class="empty">Keranjang masih kosong.</div>';
+  else h += `<div class="row"><span>Total Harga (${n})</span><b class="price">${fmt(tot)}</b></div><button class="p" data-act="checkout" style="width:100%">Checkout</button>
+    <p class="mut" style="text-align:center">Belanja 300K dan nikmati hadiah spesial dari Loyalti!</p>`;
+  $("cartD").innerHTML = h; $("cnt").textContent = n || "";
+}
+
+/* ===== TAMPILAN ===== */
+const logger = el => { el.textContent = ""; return t => { el.textContent += t + "\n"; }; };
+const radio = n => document.querySelector(`input[name=${n}]:checked`).value;
+function apply() {
+  const q = $("q").value.trim().toLowerCase(), lq = logger($("logQ")), ls = logger($("logS"));
+  let list;
+  if (q) list = ($("sm").value === "linear" ? linearSearch : binarySearch)(produk, q, lq);
+  else { lq("Belum ada pencarian. Ketik nama tas lalu klik Cari."); list = produk.slice(); }
+  const tipe = radio("tipe"), ada = radio("ada"), hr = radio("harga").split("-").map(Number);
+  list = list.filter(p => (kat === "Semua" || p.kat === kat) && (tipe === "semua" || p.badge) &&
+    (ada === "semua" || p.stok > 0) && p.harga >= hr[0] && p.harga <= hr[1]);
+  const [key, asc] = { populer: ["jual", false], hargaA: ["harga", true], hargaD: ["harga", false], nama: ["nama", true] }[$("urut").value];
+  ($("algo").value === "bubble" ? bubbleSort : selectionSort)(list, key, asc, ls);
+  $("judul").textContent = (kat === "Semua" ? "Semua Produk" : kat) + ` (${list.length})`;
+  renderCats(); renderGrid(list);
+}
+function renderCats() {
+  $("cats").innerHTML = $("cats2").innerHTML = CATS.map(([n, e]) => `<button class="cat ${n === kat ? "on" : ""}" data-act="cat" data-v="${n}"><i>${e}</i>${n}</button>`).join("");
+}
+function renderGrid(list, id = "grid") {
+  if (id === "grid") last = list;
+  $(id).innerHTML = list.length ? list.map(p => `<article class="card" data-act="open" data-id="${p.id}">
+    <div class="pic">${p.emoji}${p.badge ? `<span class="bd">${p.badge}</span>` : ""}
+    <button class="hrt" data-act="wish" data-id="${p.id}" aria-label="Wishlist">${wish.includes(p) ? "❤️" : "🤍"}</button></div>
+    <h4>${p.nama}</h4><div class="price">${fmt(p.harga)}</div>
+    <div class="mut">${p.stok ? "Stok " + p.stok : "Stok habis"}</div><div class="ptr">alamat ${alamat(p)}</div></article>`).join("")
+    : '<div class="empty">Tidak ada tas yang cocok. Coba filter atau kata lain.</div>';
+}
+function show(h) { $("box").innerHTML = '<button class="x" data-act="close" aria-label="Tutup">✕</button>' + h; $("modal").classList.add("on"); }
+function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("on"), 1800); }
+
+function detail(id, i) {
+  const p = produk.find(x => x.id === id);
+  if (i !== undefined) selV = i; else if (id !== cur) selV = Math.max(0, p.varian.findIndex(v => v.stok > 0));
+  cur = id; const v = p.varian[selV];
+  show(`<h2>Tambah Ke Keranjang</h2><div class="pic" style="height:150px">${p.emoji}</div>
+    <div class="row"><div><h3 style="margin:8px 0 0">${p.nama}</h3><div class="price">${fmt(p.harga)}</div></div>
+    <button data-act="wish" data-id="${p.id}" style="border:0;background:none;font-size:1.3rem" aria-label="Wishlist">${wish.includes(p) ? "❤️" : "🤍"}</button></div>
+    <table><tr><td>Brand</td><td>SyTas</td></tr><tr><td>Material</td><td>${p.bahan}</td></tr><tr><td>Ukuran</td><td>${p.ukuran}</td></tr><tr><td>Detail</td><td>${p.desk}</td></tr></table>
+    <h3>Warna: ${v.warna} <small class="${v.stok < 1 ? "bad" : v.stok <= 5 ? "warn" : ""}">${v.stok < 1 ? "(Habis)" : v.stok <= 5 ? "(Stok menipis)" : "(Tersedia)"}</small></h3>
+    <div class="sws">` + p.varian.map((x, k) => `<button class="swb ${k === selV ? "on" : ""} ${x.stok < 1 ? "bad" : ""}" data-act="pick" data-id="${p.id}" data-i="${k}"><i class="sw" style="background:${HEX[x.warna] || "#999"}"></i>${x.warna}</button>`).join("") +
+    `</div><button class="p" data-act="addv" data-id="${p.id}" style="width:100%;margin-top:14px" ${v.stok < 1 ? "disabled" : ""}>Tambah Ke Keranjang</button>`);
+}
+const BLN = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const ultahOk = () => !!(user && user.lahir && +user.lahir.split("-")[1] === new Date().getMonth() + 1);
+function accHtml() {
+  if (!user) {
+    const reg = accTab === "reg";
+    const tabs = `<div class="tabs"><button class="${reg ? "" : "on"}" data-act="tab" data-v="login">Login</button><button class="${reg ? "on" : ""}" data-act="tab" data-v="reg">Daftar</button></div>`;
+    if (!reg) return `<h2>Login</h2>${tabs}<div class="f"><input id="ae" type="email" placeholder="Email kamu"><input id="ap" type="password" placeholder="Kata sandi"><button class="p" data-act="login">Login</button><span id="msg" class="warn"></span></div>`;
+    return `<h2>Daftar</h2><p class="mut">Buat akun untuk menjadi anggota kami, mendapatkan poin, voucher gratis, dan berita lebih awal.</p>${tabs}<div class="f">
+      <input id="an" placeholder="Nama Lengkap Kamu*"><input id="ae" type="email" placeholder="Email kamu*"><input id="ah" inputmode="numeric" placeholder="Nomor HP* (08xxxxxxxxxx)">
+      <select id="ag"><option value="">Jenis kelamin*</option><option>Perempuan</option><option>Laki-laki</option></select>
+      <b class="warn">🎟️ Dapatkan Voucher Ulang Tahun!</b>
+      <div class="q"><select id="at"><option value="">Tanggal</option>${Array.from({length: 31}, (_, i) => `<option>${i + 1}</option>`).join("")}</select>
+      <select id="ab"><option value="">Bulan</option>${BLN.map((m, i) => `<option value="${i + 1}">${m}</option>`).join("")}</select>
+      <select id="ay"><option value="">Tahun</option>${Array.from({length: 55}, (_, i) => `<option>${2012 - i}</option>`).join("")}</select></div>
+      <input id="ap" type="password" placeholder="Kata sandi* (min. 6, huruf dan angka)"><input id="ap2" type="password" placeholder="Ulangi kata sandi*">
+      <label class="mut"><input type="checkbox" id="as"> Saya setuju dengan Syarat &amp; Ketentuan dan Kebijakan Privasi</label>
+      <button class="p" data-act="reg">Daftar</button><span id="msg" class="warn"></span></div>`;
+  }
+  const o = accTab === "wish" ? (wish.length ? wish.map(p => `<div class="var"><span style="font-size:2rem">${p.emoji}</span><div><b>${p.nama}</b><br>${fmt(p.harga)}</div><button data-act="open" data-id="${p.id}">Lihat</button></div>`).join("") : '<div class="empty">Wishlist kosong.</div>')
+    : (orders.length ? orders.map(x => `<div class="node" style="margin-bottom:8px"><b>${x.no}</b> - ${x.tgl}<br>${x.status}<br>${x.items.map(esc).join("<br>")}<br><b>${fmt(x.total)}</b></div>`).join("") : '<div class="empty">Tidak ada pesanan. Silakan buat pesanan untuk melihatnya di sini.</div>');
+  return `<h2>Akun Saya</h2><p>Halo, <b>${esc(user.nama)}</b> <button data-act="logout">Keluar</button></p>
+    <p class="mut">${esc(user.email)} - HP ${esc(user.hp || "-")} - Lahir ${esc(user.lahir || "-")}<br>Poin loyalti: <b>${user.poin || 0}</b>${ultahOk() ? " - 🎟️ Voucher ULTAH aktif (kode ULTAH)" : ""}</p>
+    <div class="tabs"><button class="${accTab === "wish" ? "" : "on"}" data-act="tab" data-v="orders">Pesanan (${orders.length})</button><button class="${accTab === "wish" ? "on" : ""}" data-act="tab" data-v="wish">Wishlist (${wish.length})</button></div>${o}`;
+}
+function openAcc(m) { ACT.close(); show(accHtml()); if (m && $("msg")) $("msg").textContent = m; }
+
+/* ===== VIEW, VOUCHER (struct), CHECKOUT ===== */
+function showView(v) {
+  view = v; ["home", "shop", "co"].forEach(i => $(i).hidden = i !== v); $("logs").hidden = v === "co"; scrollTo(0, 0);
+  if (v === "home") renderHome();
+}
+function renderHome() {
+  const b = produk.slice(); bubbleSort(b, "jual", false, logger($("logS")));
+  renderGrid(b.slice(0, 4), "gBest"); renderGrid(produk.filter(p => p.badge === "TERBARU"), "gNew");
+}
+function resetF() { kat = "Semua"; $("q").value = ""; $("urut").value = "populer"; document.querySelectorAll("#shop input[type=radio]").forEach(r => r.checked = r.defaultChecked); }
+const Voucher = (kode, ket, tipe, nilai, min) => Object.freeze({ kode, ket, tipe, nilai, min });
+const VCH = [Voucher("SYTAS10", "Diskon 10%", "%", 10, 0), Voucher("HEMAT25", "Potongan Rp25.000 (min. belanja Rp200.000)", "rp", 25000, 200000), Voucher("ULTAH", "Voucher ulang tahun 15%", "%", 15, 0)];
+const KIRIM = [["Reguler (3-5 hari)", 15000], ["Express (1-2 hari)", 30000]];
+const BAYAR = ["Mandiri", "BCA", "BRI", "QRIS", "COD (bayar di tempat)"];
+function totals() {
+  let sub = 0, n = 0; for (let c = head; c; c = c.next) { sub += c.ref.harga * c.qty; n += c.qty; }
+  const k = KIRIM[co.kirim], ong = k ? (co.kirim === 0 && sub >= GRATIS ? 0 : k[1]) : 0;
+  const v = VCH.find(x => x.kode === co.voucher), dis = v ? (v.tipe === "%" ? Math.round(sub * v.nilai / 100) : v.nilai) : 0;
+  const poin = co.poin && user ? Math.min(user.poin || 0, Math.floor((sub - dis) / 100)) : 0;
+  return { sub, n, ong, dis, poin, total: sub - dis - poin * 100 + ong };
+}
+function renderCheckout() {
+  const u = user || {};
+  $("co").innerHTML = `<div class="cohead"><button class="ic" data-act="back" aria-label="Kembali">←</button><b>Checkout</b></div>
+  <div class="cogrid"><div><h2>Detail Alamat</h2><div class="f">
+    <input id="ce" type="email" placeholder="Alamat Email (opsional)" value="${esc(u.email || "")}"><small class="mut">Detail pesanan akan dikirim ke email</small>
+    <input id="cn" placeholder="Nama Lengkap Penerima" value="${esc(u.nama || "")}">
+    <input id="ch" inputmode="numeric" placeholder="Nomor HP Penerima" value="${esc(u.hp || "")}">
+    <select id="cg"><option>Indonesia</option><option>Malaysia</option><option>Singapura</option></select>
+    <input id="ck" list="kota" placeholder="Kota dan Kecamatan"><datalist id="kota"><option>Surabaya, Gubeng</option><option>Surabaya, Wonokromo</option><option>Sidoarjo, Waru</option><option>Jakarta Selatan, Kebayoran Baru</option><option>Bandung, Coblong</option></datalist>
+    <textarea id="cd" maxlength="250" rows="4" placeholder="Detail Alamat"></textarea><div class="mut" style="text-align:right" id="cc">0 / 250</div>
+    <label>Buat sebagai order dropship <input type="checkbox" id="cdrop"></label></div>
+    <h2>Metode Pengiriman</h2><div id="kirim"></div><h2>Metode Pembayaran</h2><div id="bayar"></div></div>
+  <div><div class="panel" id="sum"></div></div></div>`;
+  coUpd();
+}
+function coUpd() {
+  const t = totals(), ok = $("ck").value.trim() && $("cd").value.trim().length >= 10;
+  $("kirim").innerHTML = ok ? KIRIM.map(([n, h], i) => `<label class="opt"><input type="radio" name="kirim" value="${i}" ${co.kirim === i ? "checked" : ""}> ${n} <b>${i === 0 && t.sub >= GRATIS ? "GRATIS" : fmt(h)}</b></label>`).join("")
+    : '<div class="ban">Lengkapi rincian alamat untuk melihat metode pengiriman yang tersedia.</div>';
+  $("bayar").innerHTML = BAYAR.map((b, i) => `<label class="opt"><input type="radio" name="bayar" value="${i}" ${co.bayar === i ? "checked" : ""}> ${b}</label>`).join("");
+  let it = ""; for (let c = head; c; c = c.next) it += `<div class="var"><span style="font-size:2rem">${c.ref.emoji}</span><div><b>${c.ref.nama}</b><br><small>${c.warna} - Jumlah: ${c.qty}</small></div><b>${fmt(c.ref.harga * c.qty)}</b></div>`;
+  $("sum").innerHTML = it + `<div class="f"><div class="q"><input id="cv" placeholder="Voucher (kode)" value="${co.voucher}"><button data-act="vch">Pakai</button></div>
+    <small class="mut">${co.vmsg || "Kode tersedia: SYTAS10, HEMAT25" + (ultahOk() ? ", ULTAH" : "")}</small>
+    <label class="mut">Gunakan Poin Loyalti (🅟${user ? user.poin || 0 : 0}) <input type="checkbox" name="poin" ${co.poin ? "checked" : ""} ${user && user.poin ? "" : "disabled"}></label></div>
+    <div class="row"><span>Subtotal • ${t.n} barang</span><span>${fmt(t.sub)}</span></div>
+    <div class="row"><span>Pengiriman</span><span>${co.kirim < 0 ? "-" : t.ong ? fmt(t.ong) : "GRATIS"}</span></div>
+    ${t.dis ? `<div class="row"><span>Voucher</span><span>-${fmt(t.dis)}</span></div>` : ""}${t.poin ? `<div class="row"><span>Poin</span><span>-${fmt(t.poin * 100)}</span></div>` : ""}
+    <div class="row price"><span>Total Pembayaran</span><span>${fmt(t.total)}</span></div>
+    <p class="mut" style="text-align:center">🔒 Transaksi Aman | Pembayaran telah terenkripsi.</p>
+    <div class="ban">Bea masuk atau pajak impor mungkin dikenakan tergantung negara tujuan pengiriman.</div>
+    <button class="p dark" data-act="order" style="width:100%;padding:12px">Order Sekarang</button><div id="comsg" class="warn"></div>
+    <p class="mut" style="text-align:center">Dengan melakukan pesanan, telah setuju dengan <a href="#" data-act="chat">Syarat &amp; Ketentuan</a></p>`;
+}
+
+const ACT = {
+  menu() { $("menu").innerHTML = `<button class="x" data-act="close" aria-label="Tutup">✕</button><h2>Menu</h2>
+    <button class="m" data-act="home"><b>HOME</b></button><button class="m" data-act="shop">Semua Produk</button><button class="m" data-act="best">Best Selling</button><h3>Bags</h3>` +
+    CATS.slice(1).map(([n, e]) => `<button class="m" data-act="cat" data-v="${n}">${e} ${n}</button>`).join("") + '<h3>Bantuan</h3><button class="m" data-act="chat">Hubungi kami</button>';
+    $("menu").classList.add("open"); $("ov").classList.add("on"); },
+  cart() { cartUpd(); $("cartD").classList.add("open"); $("ov").classList.add("on"); },
+  close() { document.querySelectorAll(".drawer").forEach(d => d.classList.remove("open")); $("ov").classList.remove("on"); $("modal").classList.remove("on"); },
+  home() { ACT.close(); showView("home"); },
+  shop() { ACT.close(); resetF(); showView("shop"); apply(); },
+  unggul() { ACT.close(); resetF(); document.querySelector("input[name=tipe][value=unggul]").checked = true; showView("shop"); apply(); },
+  best() { ACT.unggul(); },
+  find() { ACT.close(); showView("shop"); $("q").focus(); $("q").scrollIntoView({ block: "center" }); },
+  apply() { apply(); },
+  cat(t) { const k = t.dataset.v; ACT.close(); resetF(); kat = k; showView("shop"); apply(); },
+  open(t) { detail(+t.dataset.id); },
+  pick(t) { detail(+t.dataset.id, +t.dataset.i); },
+  wish(t) { const p = produk.find(x => x.id === +t.dataset.id), i = wish.indexOf(p);
+    i < 0 ? wish.push(p) : wish.splice(i, 1); view === "home" ? renderHome() : renderGrid(last); if ($("modal").classList.contains("on") && cur === p.id) detail(p.id); },
+  addv(t) { const p = produk.find(x => x.id === +t.dataset.id); addCart(p, p.varian[selV].warna); $("modal").classList.remove("on"); toast("Ditambahkan ke keranjang"); },
+  inc(t) { const n = nodeAt(+t.dataset.i), st = n.ref.varian.find(v => v.warna === n.warna).stok; if (n.qty < st) { n.qty++; cartUpd(); } else toast("Stok tidak mencukupi"); },
+  dec(t) { const n = nodeAt(+t.dataset.i); n.qty > 1 ? (n.qty--, cartUpd()) : removeNode(n); },
+  del(t) { removeNode(nodeAt(+t.dataset.i)); },
+  tow(t) { const n = nodeAt(+t.dataset.i); if (!wish.includes(n.ref)) wish.push(n.ref); removeNode(n); toast("Dipindahkan ke wishlist"); },
+  checkout() { if (!head) return; ACT.close(); co = { kirim: -1, bayar: -1, voucher: "", poin: false, vmsg: "" }; renderCheckout(); showView("co"); },
+  back() { showView("shop"); },
+  vch() {
+    const kode = $("cv").value.trim().toUpperCase(), v = VCH.find(x => x.kode === kode), sub = totals().sub;
+    co.voucher = ""; co.vmsg = !v ? "Kode voucher tidak ditemukan." : v.kode === "ULTAH" && !ultahOk() ? "Voucher ulang tahun hanya untuk akun yang bulan lahirnya bulan ini." :
+      sub < v.min ? "Minimal belanja belum terpenuhi." : (co.voucher = kode, "Voucher dipakai: " + v.ket); coUpd();
+  },
+  order() {
+    const g = id => $(id).value.trim(), t = totals();
+    const err = !g("cn") ? "Nama penerima wajib diisi." : !/^08\d{8,11}$/.test(g("ch")) ? "Nomor HP tidak valid (08xxxxxxxxxx)." :
+      g("ce") && !/^\S+@\S+\.\S+$/.test(g("ce")) ? "Format email tidak valid." : !g("ck") ? "Kota dan kecamatan wajib diisi." :
+      g("cd").length < 10 ? "Detail alamat minimal 10 karakter." : co.kirim < 0 ? "Pilih metode pengiriman." : co.bayar < 0 ? "Pilih metode pembayaran." : "";
+    if (err) return $("comsg").textContent = err;
+    const items = []; for (let c = head; c; c = c.next) items.push(`${c.ref.nama} (${c.warna}) x${c.qty}`);
+    const no = "SY" + (1001 + orders.length), bank = BAYAR[co.bayar], hp = g("ch"), alm = `${g("cn")}, ${g("cd")}, ${g("ck")}`;
+    if (user) { user.poin = (user.poin || 0) - t.poin + Math.floor(t.total / 10000); }
+    orders.unshift({ no, tgl: new Date().toLocaleDateString("id-ID"), items, total: t.total, status: `Menunggu pembayaran (${bank})` });
+    head = null; cartUpd(); showView("home");
+    show(`<h2>Pesanan berhasil dibuat 🎉</h2><p>Nomor pesanan <b>${no}</b></p><p class="price">${fmt(t.total)}</p>
+      <p>${co.bayar === 4 ? "Siapkan uang pas saat kurir tiba." : co.bayar === 3 ? "Scan kode QRIS di aplikasi pembayaranmu sebelum 24 jam." : `Transfer ke Virtual Account ${bank} <b>8808${hp}</b> sebelum 24 jam.`}</p>
+      <p class="mut">Dikirim ke: ${esc(alm)}</p><button class="p" data-act="orders">Lihat pesanan</button>`);
+  },
+  orders() { accTab = user ? "orders" : "login"; ACT.close(); show(accHtml()); if (!user) $("msg").textContent = "Login untuk melihat riwayat pesananmu."; },
+  acc() { if (user && accTab === "login") accTab = "orders"; openAcc(); },
+  tab(t) { accTab = t.dataset.v; show(accHtml()); },
+  reg() {
+    const g = id => $(id).value.trim(), sandi = $("ap").value, email = g("ae"), hp = g("ah");
+    const err = g("an").length < 3 ? "Nama lengkap minimal 3 karakter." : !/^\S+@\S+\.\S+$/.test(email) ? "Format email tidak valid." :
+      !/^08\d{8,11}$/.test(hp) ? "Nomor HP harus diawali 08 (10-13 digit)." : !g("ag") ? "Pilih jenis kelamin." :
+      !g("at") || !g("ab") || !g("ay") ? "Lengkapi tanggal ulang tahun untuk voucher ulang tahun." :
+      sandi.length < 6 || !/\d/.test(sandi) || !/[a-zA-Z]/.test(sandi) ? "Kata sandi minimal 6 karakter, kombinasi huruf dan angka." :
+      sandi !== $("ap2").value ? "Konfirmasi kata sandi tidak sama." : !$("as").checked ? "Setujui Syarat & Ketentuan dulu." :
+      users.some(u => u.email === email) ? "Email sudah terdaftar." : "";
+    if (err) return $("msg").textContent = err;
+    user = { nama: g("an"), email, hp, gender: g("ag"), lahir: `${g("ay")}-${g("ab").padStart(2, "0")}-${g("at").padStart(2, "0")}`, sandi, poin: 50 };
+    users.push(user); // catatan: sandi polos hanya untuk demo tugas
+    try { localStorage.setItem("sytas-users", JSON.stringify(users)); } catch (e) {}
+    accTab = "orders"; show(accHtml()); toast("Selamat datang! Bonus 50 poin loyalti");
+  },
+  login() {
+    const u = users.find(x => x.email === $("ae").value.trim() && x.sandi === $("ap").value);
+    if (!u) return $("msg").textContent = "Email atau kata sandi salah.";
+    user = u; accTab = "orders"; show(accHtml());
+  },
+  logout() { user = null; accTab = "login"; show(accHtml()); },
+  chat() { ACT.close(); show("<h2>Hubungi SyTas</h2><p>Chat admin kami di WhatsApp 0812-3456-7890 (contoh) setiap hari pukul 09.00 - 21.00.</p>"); }
+};
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-act]"); if (!t) return;
+  if (t.id === "modal" && e.target !== t) return;
+  e.preventDefault(); if (ACT[t.dataset.act]) ACT[t.dataset.act](t);
+});
+document.addEventListener("change", e => {
+  if (e.target.closest("[data-f]")) apply();
+  const n = e.target.name;
+  if (e.target.closest("#co") && (n === "kirim" || n === "bayar" || n === "poin")) { co[n === "poin" ? "poin" : n] = n === "poin" ? e.target.checked : +e.target.value; coUpd(); }
+});
+document.addEventListener("input", e => {
+  if (e.target.id === "cd") $("cc").textContent = e.target.value.length + " / 250";
+  if (e.target.id === "ck" || e.target.id === "cd") coUpd();
+});
+$("q").addEventListener("keydown", e => { if (e.key === "Enter") apply(); });
+cartUpd(); apply(); showView("home");
+</script>
+</body>
+</html>
